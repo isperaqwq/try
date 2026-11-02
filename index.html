@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mneme</title>
+    <meta
+      name="description"
+      content="SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。"
+    />
+    <meta property="og:title" content="Mneme" />
+    <meta
+      property="og:description"
+      content="SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。"
+    />
+    <style>
+      :root {
+        --SmartThemeBorderColor: rgba(255, 255, 255, 0.12);
+        --SmartThemeBlurTintColor: rgba(24, 24, 28, 0.96);
+        --SmartThemeBodyColor: #e8e4dc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at 20% 15%, #232028 0%, #131217 70%);
+        color: #e8e4dc;
+        font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+      .st-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        background: rgba(16, 16, 20, 0.92);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100;
+      }
+      .st-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        letter-spacing: 0.04em;
+        color: #d6cfc2;
+      }
+      .st-title strong {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-style: italic;
+        font-size: 18px;
+        color: #b08d57;
+      }
+      #extensionsMenu {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #extensionsMenu .list-group-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(176, 141, 87, 0.55);
+        background: rgba(176, 141, 87, 0.12);
+        color: #e8e4dc;
+        font-size: 13px;
+        cursor: pointer;
+        user-select: none;
+      }
+      #extensionsMenu .list-group-item:hover {
+        background: rgba(176, 141, 87, 0.25);
+      }
+      #chat {
+        position: fixed;
+        left: 24px;
+        right: 24px;
+        top: 64px;
+        bottom: 24px;
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(20, 20, 25, 0.78);
+        overflow: hidden;
+      }
+      .st-chat-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.02);
+        font-size: 13px;
+      }
+      .st-chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .st-msg {
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        line-height: 1.65;
+        font-size: 14px;
+      }
+      .st-msg-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #b08d57;
+        margin-bottom: 4px;
+      }
+      .st-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(14, 14, 18, 0.75);
+        flex-wrap: wrap;
+      }
+      .st-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid #b08d57;
+        background: transparent;
+        color: #b08d57;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .st-btn:hover {
+        background: #b08d57;
+        color: #181510;
+      }
+      .st-status {
+        margin-left: auto;
+        font-size: 12px;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="st-topbar">
+      <div class="st-title">
+        <strong>Mneme</strong>
+        <span>SillyTavern 卷宗式记忆工作台</span>
+      </div>
+      <div id="extensionsMenu" aria-label="扩展菜单"></div>
+    </header>
+
+    <main id="chat" aria-label="聊天区域">
+      <div class="st-chat-header">
+        <span>当前角色：<strong>沈栖迟</strong> · 场景：旧书店与钟楼</span>
+        <span id="st-floor-count">楼层：0</span>
+      </div>
+      <div id="st-chat-list" class="st-chat-messages"></div>
+      <div class="st-controls">
+        <button id="st-sim-reply" type="button" class="st-btn">模拟 AI 回复（含记忆块）</button>
+        <button id="st-reroll-last" type="button" class="st-btn">重说最新楼层</button>
+        <button id="st-del-last" type="button" class="st-btn">删除最新楼层</button>
+        <span id="st-inject-status" class="st-status">已就绪</span>
+      </div>
+    </main>
+
+    <script>
+      window.__handlers = {};
+      const sampleTurns = [
+        {
+          text: '她抬头看了你一眼，手指停在旧书脊上，把一枚铜钥匙推到桌角。',
+          delta: {
+            summary: '【1924年10月22日傍晚·旧书店】沈栖迟在旧书店抬头与你对视，将开启钟楼门的铜钥匙推到桌角，约定入夜后一同前往钟楼。',
+            importance: 'major',
+            characters: ['沈栖迟'],
+            anchor: '指尖停在泛黄的书脊上',
+            bonds: [
+              {
+                name: '沈栖迟',
+                delta: 3.5,
+                relation: '旧书店店主与持信访客',
+                impression: '谨慎但抱有好奇，留意着你手中的旧信',
+                majorEvent: '递交开启钟楼的铜钥匙'
+              }
+            ],
+            items: [
+              {
+                action: 'gain',
+                name: '钟楼铜钥匙',
+                holder: '旅人',
+                state: '完好',
+                source: '沈栖迟在旧书店桌角转交',
+                effect: '黄铜锻造的旧钥匙，柄端刻有守夜人徽记，可开启古钟楼侧门与地下暗格。'
+              }
+            ],
+            events: [
+              {
+                category: '约定',
+                title: '入夜同探古钟楼',
+                content: '与沈栖迟立下约定，于1924年10月22日子时携铜钥匙一同登上旧城钟楼查明真相，绝不向第三人泄露行踪。',
+                participants: ['旅人', '沈栖迟']
+              }
+            ]
+          }
+        },
+        {
+          text: '钟楼顶层的风吹灭了提灯，你把随身的怀表递给她留作信物，她则将铜铃放在你掌心。',
+          delta: {
+            summary: '【1924年10月22日子时·钟楼顶层】与沈栖迟登上钟楼顶层，你将怀表赠予她作为信物，她将古旧铜铃交给你并叮嘱勿惊动守夜人。',
+            importance: 'major',
+            characters: ['沈栖迟'],
+            anchor: '冰凉的铜铃落在掌心',
+            bonds: [
+              {
+                name: '沈栖迟',
+                delta: 4.2,
+                relation: '共探钟楼的守夜同伴',
+                impression: '开始信赖你的判断，妥善收起了你赠予的怀表',
+                majorEvent: '互换怀表与铜铃信物'
+              }
+            ],
+            items: [
+              {
+                action: 'gain',
+                name: '古旧铜铃',
+                holder: '旅人',
+                state: '消音铭文激活',
+                source: '沈栖迟于钟楼顶层托付',
+                effect: '内壁刻有消音铭文的青铜铃铛，摇动时仅特定频率可唤醒或安抚守夜人。'
+              },
+              {
+                action: 'give',
+                name: '银壳旧怀表',
+                holder: '沈栖迟',
+                state: '贴身保管',
+                source: '旅人亲手赠予沈栖迟',
+                effect: '表盖内侧嵌有旧城微缩地图的银怀表，现由沈栖迟贴身保管作为联络信物。'
+              }
+            ],
+            events: [
+              {
+                category: '誓言',
+                title: '守夜人密室同盟',
+                content: '两人在钟楼顶层交换信物立誓：无论密室中藏有何种旧城真相，都共同承担后果。',
+                participants: ['旅人', '沈栖迟']
+              }
+            ]
+          }
+        },
+        {
+          text: '守夜人的脚步声在石阶下回荡，她拉住你的衣袖退入暗影中。',
+          delta: {
+            summary: '【1924年10月22日子时二刻·钟楼回廊】守夜人靠近石阶，沈栖迟拉住你隐入钟楼暗影避开巡查。',
+            importance: 'normal',
+            bonds: [
+              {
+                name: '沈栖迟',
+                delta: 0.8,
+                relation: '默契渐生的守夜搭档',
+                impression: '在危急关头配合默契，对你放下戒备',
+                majorEvent: ''
+              }
+            ],
+            items: [],
+            events: []
+          }
+        }
+      ];
+      let turnCursor = 0;
+
+      function renderChatList() {
+        const listEl = document.getElementById('st-chat-list');
+        const countEl = document.getElementById('st-floor-count');
+        if (!listEl || !window.__ctx) return;
+        countEl.textContent = '楼层：' + window.__ctx.chat.length;
+        listEl.innerHTML = window.__ctx.chat
+          .map(
+            (m, idx) =>
+              `<div class="st-msg"><div class="st-msg-head"><span>#${idx + 1} · ${
+                m.is_user ? '你' : '沈栖迟'
+              }</span><span>已剥离 MNEME 注释块</span></div><div>${String(m.mes || '').replace(
+                /</g,
+                '&lt;'
+              )}</div></div>`
+          )
+          .join('');
+      }
+
+      const ctx = {
+        chatId: 'demo-chat-1',
+        name1: '旅人',
+        chat: [],
+        chatMetadata: {},
+        extensionSettings: { mneme: { autoInitBonds: false, autoTimeline: false } },
+        characters: [
+          {
+            name: '沈栖迟',
+            description: '旧书店与古钟楼的看守人，熟知城中秘闻。',
+            personality: '沉静内敛，观察敏锐。',
+            scenario: '深秋的雨夜，你带着一封旧信来到她的书店。'
+          }
+        ],
+        characterId: 0,
+        eventTypes: {
+          MESSAGE_RECEIVED: 'message_received',
+          MESSAGE_EDITED: 'message_edited',
+          MESSAGE_DELETED: 'message_deleted',
+          CHAT_CHANGED: 'chat_changed',
+          GENERATION_STARTED: 'generation_started',
+          GENERATE_AFTER_DATA: 'generate_after_data',
+          GENERATION_STOPPED: 'generation_stopped'
+        },
+        eventSource: {
+          on(event, handler) {
+            (window.__handlers[event] ||= []).push(handler);
+          },
+          emit(event, ...args) {
+            for (const fn of window.__handlers[event] || []) fn(...args);
+          }
+        },
+        setExtensionPrompt(key, value, pos, depth, scan, role) {
+          window.__injected = { key, value, pos, depth, scan, role };
+          const statusEl = document.getElementById('st-inject-status');
+          if (statusEl) {
+            statusEl.textContent = value
+              ? `提示词已注入（${value.length} 字符）`
+              : '提示词注入已清空';
+          }
+        },
+        updateMessageBlock() {
+          window.__rendered = (window.__rendered || 0) + 1;
+          renderChatList();
+        },
+        saveMetadata() {
+          window.__saved = (window.__saved || 0) + 1;
+        },
+        saveSettingsDebounced() {},
+        getWorldInfoNames() {
+          return ['旧城秘闻录', '钟楼守夜规条'];
+        },
+        loadWorldInfo: async (name) => ({
+          entries: {
+            0: {
+              comment: name + '·主线背景',
+              content: '旧书店地下通往钟楼密室，铜钥匙与古旧铜铃是揭开旧城真相的信物。',
+              constant: true
+            }
+          }
+        }),
+        getCharacterCardFields: () => ({
+          description: '旧书店与古钟楼的看守人，熟知城中秘闻。',
+          personality: '沉静内敛，观察敏锐。'
+        }),
+        generateRaw: async (opts) => {
+          const p = String((opts && opts.prompt) || '');
+          if (p.includes('各分卷宗内容')) {
+            return JSON.stringify({
+              epoch: {
+                title: '旧城迷雾总卷',
+                timeRange: '1924年10月22日-1924年10月23日',
+                recap: '【1924年10月22日-1924年10月23日】这些日子里，旅人携旧信造访沈栖迟的旧书店，取得钟楼铜钥匙，并于子时同登古钟楼顶层互换怀表与铜铃信物，立下同探密室的守夜盟约。'
+              }
+            });
+          }
+          if (p.includes('本卷记忆条目')) {
+            return JSON.stringify({
+              seal: {
+                title: '旧书店与钟楼之夜',
+                timeRange: '1924年10月22日傍晚-1924年10月22日子时',
+                recap: '【1924年10月22日傍晚-1924年10月22日子时】这些日子里，旅人携旧信来到沈栖迟的旧书店并取得钟楼铜钥匙，入夜后两人一同登上古钟楼顶层互换怀表与铜铃信物，立下共探密室的同盟誓言。'
+              }
+            });
+          }
+          return JSON.stringify({
+            bonds: [
+              {
+                name: '沈栖迟',
+                initialScore: 35,
+                impression: '带着旧信前来的访客，值得留心观察',
+                events: ['雨夜造访旧书店']
+              }
+            ]
+          });
+        }
+      };
+
+      window.SillyTavern = { getContext: () => ctx };
+      window.__ctx = ctx;
+
+      function pushSimulatedTurn() {
+        const sample = sampleTurns[turnCursor % sampleTurns.length];
+        turnCursor += 1;
+        const floorIndex = ctx.chat.length;
+        ctx.chat.push({
+          mes: sample.text + '\n<!--MNEME\n' + JSON.stringify(sample.delta) + '\nMNEME-->',
+          is_user: false,
+          swipe_id: 0,
+          swipes: []
+        });
+        renderChatList();
+        const handlers = window.__handlers['message_received'] || [];
+        for (const fn of handlers) fn(floorIndex, 'normal');
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('st-sim-reply')?.addEventListener('click', () => {
+          pushSimulatedTurn();
+        });
+        document.getElementById('st-reroll-last')?.addEventListener('click', () => {
+          if (ctx.chat.length === 0) return;
+          const floorIndex = ctx.chat.length - 1;
+          const sample = sampleTurns[turnCursor % sampleTurns.length];
+          turnCursor += 1;
+          ctx.chat[floorIndex] = {
+            mes: sample.text + '（重说）\n<!--MNEME\n' + JSON.stringify(sample.delta) + '\nMNEME-->',
+            is_user: false,
+            swipe_id: (ctx.chat[floorIndex].swipe_id || 0) + 1,
+            swipes: []
+          };
+          renderChatList();
+          const handlers = window.__handlers['message_received'] || [];
+          for (const fn of handlers) fn(floorIndex, 'swipe');
+        });
+        document.getElementById('st-del-last')?.addEventListener('click', () => {
+          if (ctx.chat.length === 0) return;
+          ctx.chat.pop();
+          turnCursor = Math.max(0, turnCursor - 1);
+          renderChatList();
+          const handlers = window.__handlers['message_deleted'] || [];
+          for (const fn of handlers) fn();
+        });
+        setTimeout(() => {
+          pushSimulatedTurn();
+          const wandBtn = document.querySelector('#mneme-wand [role="button"]');
+          if (wandBtn) wandBtn.click();
+        }, 120);
+      });
+    </script>
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
