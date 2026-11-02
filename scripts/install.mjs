@@ -10,7 +10,7 @@ import {
 import { dirname, join, resolve } from 'node:path';
 
 const source = resolve(process.cwd());
-const target = 'D:/sl/SillyTavern/data/default-user/extensions/Mneme';
+const target = 'D:/sl/SillyTavern/data/default-user/extensions/Mneme-Chronicle';
 
 if (!existsSync(resolve(source, 'dist/index.js'))) {
   console.error('缺少 dist/index.js，请先运行 npm run build');

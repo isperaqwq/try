@@ -11,7 +11,7 @@ function boot(): void {
   reloadSettings();
 
   const root = document.createElement('div');
-  root.id = 'mneme-root';
+  root.id = 'mneme-chronicle-root';
   document.body.appendChild(root);
   createApp(App).mount(root);
 
@@ -20,7 +20,7 @@ function boot(): void {
     togglePanel();
   });
   initHost();
-  console.info('[Mneme] booted');
+  console.info('[Mneme · 岁记] booted');
 }
 
 if (document.readyState === 'loading') {

@@ -2,7 +2,7 @@
   <button
     ref="ballRef"
     type="button"
-    class="mneme-ball"
+    class="mneme-ball mneme-chronicle-ball"
     :class="[
       `mneme-theme-${settingsStore.ui.theme}`,
       {
@@ -12,8 +12,8 @@
       },
     ]"
     :style="ballStyle"
-    :title="panelState.overviewOpen ? '收起 Mneme 一览' : '打开 Mneme 一览'"
-    aria-label="Mneme 一览"
+    :title="panelState.overviewOpen ? '收起 Mneme·岁记 一览' : '打开 Mneme·岁记 一览'"
+    aria-label="Mneme·岁记 一览"
     @pointerdown="onPointerDown"
     @keydown.enter.prevent="toggleDrawer"
   >

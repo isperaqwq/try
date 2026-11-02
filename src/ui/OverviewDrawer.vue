@@ -5,10 +5,10 @@
     :class="`mneme-theme-${settingsStore.ui.theme}`"
     :style="drawerStyle"
     role="dialog"
-    aria-label="Mneme 一览"
+    aria-label="Mneme·岁记 一览"
   >
     <header class="mneme-drawer-head">
-      <span class="mneme-drawer-title">Mneme · 一览</span>
+      <span class="mneme-drawer-title">Mneme · 岁记一览</span>
       <button class="mneme-icon-btn" title="关闭一览" @click="panelState.overviewOpen = false">
         ×
       </button>
@@ -158,7 +158,8 @@ const volumePercent = computed(() => {
 
 const drawerStyle = computed(() => {
   void viewportTick.value;
-  const ballRect = document.querySelector('.mneme-ball')?.getBoundingClientRect();
+  const ballEl = document.querySelector('.mneme-chronicle-ball') ?? document.querySelector('.mneme-ball');
+  const ballRect = ballEl?.getBoundingClientRect();
   const ballX = settingsStore.ui.ballX ?? ballRect?.left ?? 0;
   const ballY = settingsStore.ui.ballY ?? ballRect?.top ?? 0;
   const chat = document.getElementById('chat');
@@ -206,7 +207,7 @@ function onDocumentPointerDown(event: PointerEvent): void {
   const target = event.target as Node | null;
   if (!target) return;
   if (drawerRef.value?.contains(target)) return;
-  const ball = document.querySelector('.mneme-ball');
+  const ball = document.querySelector('.mneme-chronicle-ball') ?? document.querySelector('.mneme-ball');
   if (ball?.contains(target)) return;
   panelState.overviewOpen = false;
 }
