@@ -1,5 +1,5 @@
-const BLOCK_RE = /<!--\s*MNEME[\s\S]*?MNEME\s*-->/gi;
-const FENCE_MNEME_RE = /```mneme\s*[\s\S]*?```/gi;
+const BLOCK_RE = /<!--\s*(?:SUIJI|MNEME)[\s\S]*?(?:SUIJI|MNEME)\s*-->/gi;
+const FENCE_MNEME_RE = /```(?:suiji|mneme)\s*[\s\S]*?```/gi;
 
 export function stripDelta(text: string): { text: string; removed: boolean } {
   if (!text || typeof text !== 'string') {

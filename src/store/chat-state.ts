@@ -22,14 +22,14 @@ export function loadFromChat(): MnemeState | null {
 
   lastChatId = ctx.chatId ?? null;
 
-  const raw = ctx.chatMetadata.mneme;
+  const raw = ctx.chatMetadata.suiji ?? ctx.chatMetadata.mneme;
   const result = migrateState(raw);
 
   if (result.status === 'failed' && raw) {
     try {
-      ctx.chatMetadata.mneme_backup = raw;
+      ctx.chatMetadata.suiji_backup = raw;
     } catch (error) {
-      console.warn('[Mneme] backup failed', error);
+      console.warn('[岁记] backup failed', error);
     }
   }
 
@@ -53,7 +53,9 @@ export function commitState(next: MnemeState): void {
   const ctx = getCtx();
   if (!ctx || !ctx.chatMetadata) return;
 
-  ctx.chatMetadata.mneme = JSON.parse(JSON.stringify(next));
+  const serialized = JSON.parse(JSON.stringify(next));
+  ctx.chatMetadata.suiji = serialized;
+  ctx.chatMetadata.mneme = serialized;
 
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {

@@ -1,24 +1,18 @@
-# Mneme
+# 岁记 (Suiji)
 
-SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。
+SillyTavern 分聊天绑定的三级卷宗式记忆插件：三级卷宗记忆（当前卷 / 已封卷宗 / 典籍总卷）、羁绊、道具与重要事件。
 
 ## 安装
 
 ### 方式一：Git URL（推荐）
 
-酒馆 → 扩展 → 安装扩展，填入：
-
-```
-https://github.com/ShanTing-sy/Mneme
-```
-
-安装后刷新页面。以后可以在「扩展」里点更新。
+酒馆 → 扩展 → 安装扩展，填入你的仓库地址，安装后刷新页面即可在魔法棒菜单中看到「岁记」。
 
 ### 方式二：手动复制
 
-1. 把 `manifest.json` 与 `dist/` 复制到 `SillyTavern/data/<用户名>/extensions/Mneme/`
+1. 把 `manifest.json`、`index.js`、`style.css`（及 `dist/`）复制到 `SillyTavern/data/<用户名>/extensions/Suiji/`
 2. 刷新酒馆页面
-3. 魔法棒菜单中点击 `Mneme`
+3. 魔法棒菜单中点击 `岁记`
 
 本机一键安装：
 
@@ -27,12 +21,13 @@ npm run build
 node scripts/install.mjs
 ```
 
-## 使用
+## 核心功能
 
-- 每轮 AI 回复后自动生成一条摘要，满 10 条封卷。
-- 「羁绊」「道具」由模型顺带上报，也可手动编辑。
-- 「剧情线」默认关闭，可在设置中开启新聊天自动生成。
-- 模型输出的记忆块会以 HTML 注释形式附在回复末尾，插件解析后从正文中剔除。
+- **三级卷宗记忆**：按 `【xx年xx月xx日（具体时间）·xx地点】` 一体化记录，支持 `normal` / `major` / `permanent` 分级；当前卷满 N 条自动封卷，已封卷宗满 M 卷自动合并为「典籍总卷」。
+- **羁绊**：好感度精确到小数点后一位，支持自定义关系与独立行展示对 user 印象，仅记录重大好感转折事件。
+- **道具**：支持持有中、已赠出（送给他人）、已遗失、已消耗与物品当前状态。
+- **重要事件**：永久保留约定、誓言、束缚及重大命运转折，绝不被预算裁切。
+- **精准楼层回退**：删除最新楼层或重说最新楼层时自动根据快照回退上一轮记忆、羁绊、道具与事件状态。
 
 ## 开发
 
@@ -43,21 +38,6 @@ npm run build
 npm run typecheck
 ```
 
-集成验收（零依赖 CDP，需要本机 Edge）：
-
-```bash
-node scripts/verify-cdp.mjs    # 独立测试页，验证整条记忆链路
-node scripts/verify-live.mjs   # 真实酒馆页面，验证扩展加载与面板
-```
-
-## 数据
-
-所有记忆保存在当前聊天的元数据 `chat_metadata.mneme` 中，随聊天导出。
-
-## 作者
-
-简舒然 · [GitHub](https://github.com/ShanTing-sy)
-
 ## 版本
 
-V1.0.0
+V2.0.0

@@ -116,7 +116,7 @@ test('includes instruction, recent memory, bonds, items (with condition & holder
   });
 
   const text = buildInjection(state, settings, deps);
-  assert.match(text, /Mneme·记录要求/);
+  assert.match(text, /岁记·记录要求/);
   assert.match(text, /【傍晚·书店】两人在雨里躲进书店/);
   assert.match(text, /青梅竹马的挚友/);
   assert.match(text, /12\.5/);
@@ -125,7 +125,7 @@ test('includes instruction, recent memory, bonds, items (with condition & holder
   assert.match(text, /状态：完好/);
   assert.match(text, /银怀表/);
   assert.match(text, /已赠出；状态：贴身保管；持有者：甲/);
-  assert.match(text, /Mneme·重要事件与誓言/);
+  assert.match(text, /岁记·重要事件与誓言/);
   assert.match(text, /钟楼之约/);
 });
 
@@ -172,7 +172,7 @@ test('supports selective module injection and prompt generation (e.g. only bonds
   assert.doesNotMatch(text, /"summary"/);
   assert.doesNotMatch(text, /"items"/);
   assert.doesNotMatch(text, /"events"/);
-  assert.match(text, /Mneme·羁绊/);
+  assert.match(text, /岁记·羁绊/);
   assert.match(text, /"bonds"/);
 });
 
@@ -210,7 +210,7 @@ test('drops volume recaps first when over budget', () => {
   const text = buildInjection(state, { ...settings, tokenBudget: budget }, deps);
   assert.doesNotMatch(text, /很长的复盘/);
   assert.match(text, /关键近忆/);
-  assert.match(text, /Mneme·记录要求/);
+  assert.match(text, /岁记·记录要求/);
 });
 
 test('uses a custom summary prompt when provided', () => {
@@ -241,7 +241,7 @@ test('includes <Mneme·总卷> when epochs exist', () => {
     },
   ];
   const text = buildInjection(state, settings, deps);
-  assert.match(text, /Mneme·总卷/);
+  assert.match(text, /岁记·总卷/);
   assert.match(text, /第一部：雾城秋雨/);
   assert.match(text, /1924年10月1日-1924年10月22日/);
 });

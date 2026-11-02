@@ -2,10 +2,10 @@
   <div class="mneme-tab-body">
     <div class="mneme-section-title">使用说明</div>
 
-    <h3 class="mneme-help-title">Mneme · 岁记 是什么</h3>
+    <h3 class="mneme-help-title">岁记 是什么</h3>
     <p class="mneme-entry-body">
-      一个分聊天独立绑定的 SillyTavern 三级卷宗式记忆插件（<code>Mneme-Chronicle</code>，可与原版共存区分）。每轮对话结束后，模型会在回复末尾附带一个
-      <code>&lt;!--MNEME ... MNEME--&gt;</code>
+      一个分聊天独立绑定的 SillyTavern 三级卷宗式记忆插件（<code>Suiji</code>）。每轮对话结束后，模型会在回复末尾附带一个
+      <code>&lt;!--SUIJI ... SUIJI--&gt;</code>
       结构化记忆块，插件解析后将其收入账本；下一次生成前再自动把账本注入到提示词中。
     </p>
 
@@ -20,11 +20,11 @@
     <h3 class="mneme-help-title">提示词注入位置与回退原理</h3>
     <p class="mneme-entry-body">
       <b>注入到哪里？</b><br />
-      通过酒馆原生接口 <code>setExtensionPrompt('mneme', text, 1, 1, false, 0)</code> 注入：位于聊天历史内部（IN_CHAT）、深度 <code>depth = 1</code>（即最新一轮对话的正上方）、角色为 <code>system</code>。<br /><br />
+      通过酒馆原生接口 <code>setExtensionPrompt('suiji', text, 1, 1, false, 0)</code> 注入：位于聊天历史内部（IN_CHAT）、深度 <code>depth = 1</code>（即最新一轮对话的正上方）、角色为 <code>system</code>。<br /><br />
       <b>删除最新楼层 / 重说最新楼层会怎样？</b><br />
       每轮生成前会自动保存上一轮的羁绊、道具与事件快照。当你删除或重说最新楼层时，只会精准回退被删楼层，当前卷其它记忆完好无损，且羁绊好感、印象、关系与道具会自动恢复到上一轮状态。<br /><br />
       <b>为什么以前会裁切对话？</b><br />
-      旧版默认开启了早期对话裁切；现已在「设置」中改为可选且<strong>默认关闭</strong>，不会再擅自删减你的聊天上下文或误伤正文。
+      旧版默认开启了早期对话裁切；现已在「设置」中完全移除自动裁切历史对话，绝不会再擅自删减你的聊天上下文或误伤正文。
     </p>
   </div>
 </template>

@@ -7,7 +7,7 @@
     :style="panelStyle"
   >
     <header class="mneme-head" @pointerdown="onDragStart">
-      <div class="mneme-brand">Mneme · 岁记</div>
+      <div class="mneme-brand">岁记</div>
       <div class="mneme-head-actions">
         <button
           class="mneme-icon-btn"

@@ -98,8 +98,14 @@ export function readSettings(): MnemeSettings {
   const ext = ctx?.extensionSettings;
   if (!ext) return mergeSettings(DEFAULTS, undefined);
 
-  if (!ext.mneme || typeof ext.mneme !== 'object') ext.mneme = {};
-  return mergeSettings(DEFAULTS, ext.mneme);
+  const source =
+    ext.suiji && typeof ext.suiji === 'object'
+      ? ext.suiji
+      : ext.mneme && typeof ext.mneme === 'object'
+        ? ext.mneme
+        : {};
+  ext.suiji = source;
+  return mergeSettings(DEFAULTS, source);
 }
 
 function centeredUi(base: MnemeSettings['ui']): MnemeSettings['ui'] {
@@ -123,11 +129,13 @@ function centeredUi(base: MnemeSettings['ui']): MnemeSettings['ui'] {
 function persistSettings(next: MnemeSettings): void {
   const ctx = getCtx();
   if (!ctx?.extensionSettings) return;
-  ctx.extensionSettings.mneme = JSON.parse(JSON.stringify(next));
+  const copy = JSON.parse(JSON.stringify(next));
+  ctx.extensionSettings.suiji = copy;
+  ctx.extensionSettings.mneme = copy;
   try {
     ctx.saveSettingsDebounced?.();
   } catch (error) {
-    console.warn('[Mneme] settings save failed', error);
+    console.warn('[岁记] settings save failed', error);
   }
 }
 

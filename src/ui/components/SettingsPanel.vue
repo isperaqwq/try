@@ -75,7 +75,7 @@
     </label>
 
     <label class="mneme-field">
-      <span>自动隐藏回复末尾的 MNEME 记忆块</span>
+      <span>自动隐藏回复末尾的记忆块注释</span>
       <input
         type="checkbox"
         :checked="settingsStore.autoStripBlock !== false"
@@ -83,7 +83,7 @@
       />
     </label>
     <p class="mneme-muted">
-      开启后仅剥离以 &lt;!--MNEME ... MNEME--&gt; 包裹的尾部注释块，绝不触碰正文。
+      开启后仅剥离以 &lt;!--SUIJI ... SUIJI--&gt; 包裹的尾部注释块，绝不触碰正文。
     </p>
 
     <label class="mneme-field">
@@ -306,7 +306,7 @@
       </button>
     </div>
     <p v-if="importNotice" class="mneme-warn">{{ importNotice }}</p>
-    <p class="mneme-muted">记忆保存在当前聊天的 chat_metadata.mneme 中，切换聊天自动隔离，导出聊天时一并带走。</p>
+    <p class="mneme-muted">记忆保存在当前聊天的元数据中，切换聊天自动隔离，导出聊天时一并带走。</p>
 
     <div v-if="settingsStore.debug && store.state" class="mneme-section-title">调试数据</div>
     <pre v-if="settingsStore.debug && store.state" class="mneme-debug">{{
@@ -390,7 +390,7 @@ function exportJson(): void {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `mneme-${Date.now()}.json`;
+  link.download = `suiji-${Date.now()}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }

@@ -24,7 +24,7 @@ function renderEntryLine(entry: MemoryEntry): string {
 
 function renderEntries(entries: MemoryEntry[], title: string): string {
   if (entries.length === 0) return '';
-  return `<Mneme·${title}>\n${entries.map(renderEntryLine).join('\n')}\n</Mneme·${title}>`;
+  return `<岁记·${title}>\n${entries.map(renderEntryLine).join('\n')}\n</岁记·${title}>`;
 }
 
 function renderImportantEvents(events: ImportantEvent[]): string {
@@ -34,7 +34,7 @@ function renderImportantEvents(events: ImportantEvent[]): string {
     const title = ev.title ? `${ev.title}：` : '';
     return `★${cat}${title}${ev.content}`;
   });
-  return `<Mneme·重要事件与誓言>\n${lines.join('\n')}\n</Mneme·重要事件与誓言>`;
+  return `<岁记·重要事件与誓言>\n${lines.join('\n')}\n</岁记·重要事件与誓言>`;
 }
 
 export function defaultSealPrompt(): string {
@@ -148,11 +148,11 @@ export function defaultSummaryPrompt(
 
   return [
     '请在正文完全结束后，在末尾另起一行附上且仅附上一个 HTML 注释块（严格使用标准双引号 JSON；未发生的字符串字段填 ""，无变动的数组字段填 []）：',
-    '<!--MNEME',
+    '<!--SUIJI',
     '{',
     jsonFields.join(',\n'),
     '}',
-    'MNEME-->',
+    'SUIJI-->',
     '填写说明：',
     ...rules,
   ].join('\n');
@@ -199,7 +199,7 @@ function buildInstruction(state: MnemeState, settings: MnemeSettings): string {
     .filter(Boolean)
     .join('\n');
 
-  return ['<Mneme·记录要求>', staticPart, dynamic, '</Mneme·记录要求>'].join('\n');
+  return ['<岁记·记录要求>', staticPart, dynamic, '</岁记·记录要求>'].join('\n');
 }
 
 interface Section {
@@ -288,7 +288,7 @@ export function buildInjection(
       .join('\n');
     sections.push({
       key: 'epochs',
-      text: epochRecaps ? `<Mneme·总卷>\n${epochRecaps}\n</Mneme·总卷>` : '',
+      text: epochRecaps ? `<岁记·总卷>\n${epochRecaps}\n</岁记·总卷>` : '',
       priority: 42,
       required: false,
     });
@@ -302,7 +302,7 @@ export function buildInjection(
       .join('\n');
     sections.push({
       key: 'volumes',
-      text: recaps ? `<Mneme·卷宗>\n${recaps}\n</Mneme·卷宗>` : '',
+      text: recaps ? `<岁记·卷宗>\n${recaps}\n</岁记·卷宗>` : '',
       priority: 40,
       required: false,
     });
@@ -328,7 +328,7 @@ export function buildInjection(
     });
     sections.push({
       key: 'bonds',
-      text: bondLines.length ? `<Mneme·羁绊>\n${bondLines.join('\n')}\n</Mneme·羁绊>` : '',
+      text: bondLines.length ? `<岁记·羁绊>\n${bondLines.join('\n')}\n</岁记·羁绊>` : '',
       priority: 80,
       required: false,
     });
@@ -345,7 +345,7 @@ export function buildInjection(
       });
     sections.push({
       key: 'items',
-      text: itemLines.length ? `<Mneme·道具>\n${itemLines.join('\n')}\n</Mneme·道具>` : '',
+      text: itemLines.length ? `<岁记·道具>\n${itemLines.join('\n')}\n</岁记·道具>` : '',
       priority: 45,
       required: false,
     });
@@ -390,7 +390,7 @@ export function buildInjection(
   return [
     byKey.get('importantEvents')?.text,
     byKey.get('permanent')?.text,
-    recentText ? `<Mneme·近期记忆>\n${recentText}\n</Mneme·近期记忆>` : '',
+    recentText ? `<岁记·近期记忆>\n${recentText}\n</岁记·近期记忆>` : '',
     byKey.get('major')?.text,
     byKey.get('epochs')?.text,
     byKey.get('volumes')?.text,

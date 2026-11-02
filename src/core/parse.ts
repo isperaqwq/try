@@ -7,8 +7,8 @@ import type {
 } from './types.ts';
 import { roundDecimal } from './bonds.ts';
 
-const BLOCK_RE = /<!--\s*MNEME([\s\S]*?)MNEME\s*-->/i;
-const FENCE_RE = /```(?:mneme|json)\s*([\s\S]*?)```/i;
+const BLOCK_RE = /<!--\s*(?:SUIJI|MNEME)([\s\S]*?)(?:SUIJI|MNEME)\s*-->/i;
+const FENCE_RE = /```(?:suiji|mneme|json)\s*([\s\S]*?)```/i;
 
 export interface ParseResult {
   ok: boolean;
@@ -69,7 +69,7 @@ function extractObject(text: string): string | null {
 
 function cleanJson(text: string): string {
   let out = text.replace(/^\uFEFF/, '').trim();
-  out = out.replace(/```(?:json|mneme)?/gi, '');
+  out = out.replace(/```(?:json|suiji|mneme)?/gi, '');
   out = out.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
   out = out.replace(/,\s*([}\]])/g, '$1');
   return out;

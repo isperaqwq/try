@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mneme</title>
+    <title>岁记</title>
     <meta
       name="description"
-      content="SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。"
+      content="SillyTavern 卷宗式记忆插件：三级卷宗记忆、羁绊、道具与重要事件。"
     />
-    <meta property="og:title" content="Mneme" />
+    <meta property="og:title" content="岁记" />
     <meta
       property="og:description"
-      content="SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。"
+      content="SillyTavern 卷宗式记忆插件：三级卷宗记忆、羁绊、道具与重要事件。"
     />
     <style>
       :root {
@@ -157,8 +157,8 @@
   <body>
     <header class="st-topbar">
       <div class="st-title">
-        <strong>Mneme</strong>
-        <span>SillyTavern 卷宗式记忆工作台</span>
+        <strong>岁记</strong>
+        <span>SillyTavern 三级卷宗式记忆工作台</span>
       </div>
       <div id="extensionsMenu" aria-label="扩展菜单"></div>
     </header>
@@ -444,7 +444,7 @@
         });
         setTimeout(() => {
           pushSimulatedTurn();
-          const wandBtn = document.querySelector('#mneme-wand [role="button"]');
+          const wandBtn = document.querySelector('#suiji-wand [role="button"]');
           if (wandBtn) wandBtn.click();
         }, 120);
       });

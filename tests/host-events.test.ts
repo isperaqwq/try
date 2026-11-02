@@ -61,7 +61,7 @@ test('strips the block, records the entry and rebuilds the injection', async () 
   assert.equal(ctx.chat[0].mes, body);
   assert.equal(ctx.chatMetadata.mneme.entries.length, 1);
   assert.equal(ctx.chatMetadata.mneme.entries[0].mesHash, hashText(body));
-  assert.match(ctx.injected.value, /Mneme·记录要求/);
+  assert.match(ctx.injected.value, /岁记·记录要求/);
   assert.equal(ctx.injected.pos, 1);
   assert.equal(ctx.injected.depth, 1);
   assert.equal(ctx.injected.role, 0);

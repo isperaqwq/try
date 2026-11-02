@@ -1,5 +1,5 @@
 {
-  "name": "Mneme",
-  "description": "SillyTavern 记忆插件：卷宗式记忆、羁绊、道具与折叠剧情线。",
+  "name": "岁记",
+  "description": "SillyTavern 卷宗式记忆插件：三级卷宗记忆、羁绊、道具与重要事件。",
   "requestFramePermissions": []
 }

@@ -1,18 +1,20 @@
 export function ensureWandButton(onClick: () => void, tries = 120): void {
   if (typeof document === 'undefined') return;
-  const menu = document.getElementById('extensionsMenu');
+  const menu =
+    document.getElementById('extensionsMenu') ??
+    document.querySelector('#extensionsMenu');
   if (!menu) {
     if (tries > 0) setTimeout(() => ensureWandButton(onClick, tries - 1), 500);
     return;
   }
-  if (document.getElementById('mneme-chronicle-wand')) return;
+  if (document.getElementById('suiji-wand')) return;
 
   const container = document.createElement('div');
-  container.className = 'extension_container';
-  container.id = 'mneme-chronicle-wand';
+  container.className = 'extension_container interactable';
+  container.id = 'suiji-wand';
 
   const button = document.createElement('div');
-  button.className = 'list-group-item flex-container flexGap5';
+  button.className = 'list-group-item flex-container flexGap5 interactable';
   button.setAttribute('role', 'button');
   button.tabIndex = 0;
 
@@ -20,10 +22,10 @@ export function ensureWandButton(onClick: () => void, tries = 120): void {
   icon.className = 'fa-solid fa-scroll extensionsMenuExtensionButton';
 
   const label = document.createElement('span');
-  label.textContent = 'Mneme · 岁记';
+  label.textContent = '岁记';
 
   const dot = document.createElement('span');
-  dot.id = 'mneme-chronicle-wand-dot';
+  dot.id = 'suiji-wand-dot';
   dot.className = 'mneme-badge-dot';
   dot.style.display = 'none';
 
@@ -39,6 +41,6 @@ export function ensureWandButton(onClick: () => void, tries = 120): void {
 
 export function setWandDot(on: boolean): void {
   if (typeof document === 'undefined') return;
-  const dot = document.getElementById('mneme-chronicle-wand-dot');
+  const dot = document.getElementById('suiji-wand-dot');
   if (dot) dot.style.display = on ? 'inline-block' : 'none';
 }

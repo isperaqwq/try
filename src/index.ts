@@ -10,17 +10,19 @@ import { reloadSettings } from './store/ui-settings.ts';
 function boot(): void {
   reloadSettings();
 
-  const root = document.createElement('div');
-  root.id = 'mneme-chronicle-root';
-  document.body.appendChild(root);
-  createApp(App).mount(root);
+  if (!document.getElementById('suiji-root')) {
+    const root = document.createElement('div');
+    root.id = 'suiji-root';
+    document.body.appendChild(root);
+    createApp(App).mount(root);
+  }
 
   ensureWandButton(() => {
     setWandDot(false);
     togglePanel();
   });
   initHost();
-  console.info('[Mneme · 岁记] booted');
+  console.info('[岁记] booted');
 }
 
 if (document.readyState === 'loading') {

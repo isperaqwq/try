@@ -73,9 +73,9 @@ export function refreshInjection(): void {
 
   if (!settings.enabled || !store.state) {
     try {
-      ctx.setExtensionPrompt('mneme', '', 1, 1, false, 0);
+      ctx.setExtensionPrompt('suiji', '', 1, 1, false, 0);
     } catch (error) {
-      console.warn('[Mneme] clear injection failed', error);
+      console.warn('[岁记] clear injection failed', error);
     }
     return;
   }
@@ -87,7 +87,7 @@ export function refreshInjection(): void {
 
   if (settings.debug) {
     console.info(
-      '[Mneme] refresh',
+      '[岁记] refresh',
       JSON.stringify({
         enabled: settings.enabled,
         hasState: !!store.state,
@@ -97,9 +97,9 @@ export function refreshInjection(): void {
   }
 
   try {
-    ctx.setExtensionPrompt('mneme', text, 1, 1, false, 0);
+    ctx.setExtensionPrompt('suiji', text, 1, 1, false, 0);
   } catch (error) {
-    console.warn('[Mneme] inject failed', error);
+    console.warn('[岁记] inject failed', error);
   }
 }
 
