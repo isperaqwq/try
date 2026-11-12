@@ -17,34 +17,44 @@ let registered = false;
 
 export function initHost(retries = 40): void {
   const ctx = getCtx();
-  if (!ctx) {
+  const events = ctx?.eventTypes ?? ctx?.event_types;
+  if (!ctx || !ctx.eventSource || !events) {
     if (retries > 0) setTimeout(() => initHost(retries - 1), 250);
     return;
   }
   if (registered) return;
   registered = true;
 
-  const events = ctx.eventTypes;
-  ctx.eventSource.on(events.MESSAGE_RECEIVED, (id: number, type: string) => {
-    void onMessageReceived(id, type);
-  });
-  ctx.eventSource.on(events.MESSAGE_EDITED, (id: number) => {
-    void onMessageEdited(id);
-  });
-  ctx.eventSource.on(events.MESSAGE_DELETED, () => {
-    void onMessageDeleted();
-  });
+  if (events.MESSAGE_RECEIVED) {
+    ctx.eventSource.on(events.MESSAGE_RECEIVED, (id: number, type: string) => {
+      void onMessageReceived(id, type);
+    });
+  }
+  if (events.MESSAGE_EDITED) {
+    ctx.eventSource.on(events.MESSAGE_EDITED, (id: number) => {
+      void onMessageEdited(id);
+    });
+  }
+  if (events.MESSAGE_DELETED) {
+    ctx.eventSource.on(events.MESSAGE_DELETED, () => {
+      void onMessageDeleted();
+    });
+  }
   if (events.MESSAGE_SWIPED) {
     ctx.eventSource.on(events.MESSAGE_SWIPED, (id: number) => {
       void onMessageEdited(id);
     });
   }
-  ctx.eventSource.on(events.CHAT_CHANGED, () => {
-    void onChatChanged();
-  });
-  ctx.eventSource.on(events.GENERATION_STARTED, () => {
-    refreshInjection();
-  });
+  if (events.CHAT_CHANGED) {
+    ctx.eventSource.on(events.CHAT_CHANGED, () => {
+      void onChatChanged();
+    });
+  }
+  if (events.GENERATION_STARTED) {
+    ctx.eventSource.on(events.GENERATION_STARTED, () => {
+      refreshInjection();
+    });
+  }
 
   reloadSettings();
   loadFromChat();

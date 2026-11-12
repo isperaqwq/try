@@ -97,9 +97,12 @@ export function stopInitParse(): void {
   panelState.initStage = '正在停止…';
   const ctx = getCtx();
   try {
-    void ctx?.eventSource?.emit(ctx.eventTypes.GENERATION_STOPPED);
+    const evTypes = ctx?.eventTypes ?? ctx?.event_types;
+    if (evTypes?.GENERATION_STOPPED) {
+      void ctx?.eventSource?.emit(evTypes.GENERATION_STOPPED);
+    }
   } catch (error) {
-    console.warn('[Mneme] stop failed', error);
+    console.warn('[岁记] stop failed', error);
   }
 }
 
